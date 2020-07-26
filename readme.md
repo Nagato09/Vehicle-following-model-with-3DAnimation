@@ -1,0 +1,1 @@
+[![View Vehicle Following Model with 3D Animation on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/74151-vehicle-following-model-with-3d-animation)
