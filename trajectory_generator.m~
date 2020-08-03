@@ -72,7 +72,7 @@ classdef trajectory_generator < matlab.System & matlab.system.mixin.Propagates &
 %             nextState_x=[x;x_dot;x_ddot];
             
 
-             time=get_param(obj.Model_Name,'SimulationTime');
+            time=get_param(obj.Model_Name,'SimulationTime');
             %% Vehicle states in y direction
             if(time<=obj.start_time+obj.T)
 %             y=[];
@@ -89,8 +89,7 @@ classdef trajectory_generator < matlab.System & matlab.system.mixin.Propagates &
             %% Yaw angle reference
             yaw_angle=atan(y_dot/ x_dot);
             else
-%                 obj.a0=[];
-                yaw_angle=0;
+                obj.a0=[];
                 return;
             end
         end
