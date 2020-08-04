@@ -35,12 +35,15 @@ classdef trajectory_generator < matlab.System & matlab.system.mixin.Propagates &
             % Perform one-time calculations, such as computing constants
         end
         
-        function yaw_angle = stepImpl(obj,current_point,v_x,v_y,a_y)
+        function yaw_angle = stepImpl(obj,current_point,v_x,v_y,a_y,drivingMode)
             % Implement algorithm. Calculate y as a function of input u and
             % discrete states.
             
-            
+            if(drivingMode==4)
+                obj.flag=1;
+            end
             %% Waypoint generation
+            if(obj.flag==1)
             if(isempty(obj.a0)&&(1==1))
             obj.T = abs(obj.target_point(1,1)-current_point(1,1))/v_x;
             obj.a0=current_point(1,2);
@@ -72,7 +75,7 @@ classdef trajectory_generator < matlab.System & matlab.system.mixin.Propagates &
 %             nextState_x=[x;x_dot;x_ddot];
             
 
-            time=get_param(obj.Model_Name,'SimulationTime');
+             time=get_param(obj.Model_Name,'SimulationTime');
             %% Vehicle states in y direction
             if(time<=obj.start_time+obj.T)
 %             y=[];
@@ -89,7 +92,12 @@ classdef trajectory_generator < matlab.System & matlab.system.mixin.Propagates &
             %% Yaw angle reference
             yaw_angle=atan(y_dot/ x_dot);
             else
-                obj.a0=[];
+%                 obj.a0=[];
+                yaw_angle=0;
+                return;
+            end
+            else
+                yaw_angle=0;
                 return;
             end
         end
