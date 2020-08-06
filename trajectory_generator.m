@@ -21,7 +21,7 @@ classdef trajectory_generator < matlab.System & matlab.system.mixin.Propagates &
         a3=0;
         a4=0;
         a5=0;
-        target_point=[50 2.5];
+        target_point=[];
         flag=0;
         dt=0.1;%sample time of the control signal
         T=0;%time duration of the whole lane-switch procss
@@ -38,10 +38,11 @@ classdef trajectory_generator < matlab.System & matlab.system.mixin.Propagates &
         function yaw_angle = stepImpl(obj,current_point,v_x,v_y,a_y,drivingMode)
             % Implement algorithm. Calculate y as a function of input u and
             % discrete states.
-            
+            finish=0;
             if((drivingMode==4)&&(obj.flag==0))
                 obj.flag=1;
-                
+                obj.target_point=current_point+[50 5];
+                obj.start_time=get_param(obj.Model_Name,'SimulationTime');
             end
             %% Waypoint generation
             if(isempty(obj.a0)&&(obj.flag==1))
@@ -92,8 +93,9 @@ classdef trajectory_generator < matlab.System & matlab.system.mixin.Propagates &
             %% Yaw angle reference
             yaw_angle=atan(y_dot/ x_dot);
             else
-                 obj.a0=[];
+                obj.a0=[];
                 obj.flag=0;
+                obj.T=0;
                 yaw_angle=0;
                 return;
             end
