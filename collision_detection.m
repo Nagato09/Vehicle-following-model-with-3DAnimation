@@ -15,12 +15,9 @@ classdef collision_detection < matlab.System
 
     % Pre-computed constants
     properties(Access = public)
-    v1_length = 4;%Vehicle longitudinal length
-    v2_length = 4;
-    v3_length = 4;
-    v1_width = 2;%Vehicle lateral width
-    v2_width = 2;
-    v3_width = 2;
+        %vehicle frame in meter [length width]
+        v1_frame = [4 2];
+        v2_frame = [4 2];
     end
 
     methods(Access = protected)
@@ -29,18 +26,15 @@ classdef collision_detection < matlab.System
            
         end
 
-        function collision = stepImpl(obj,v1_pos,v2_pos)
+        function collision_flag = stepImpl(obj,v1_pos,v2_pos)
             % Implement algorithm. Calculate y as a function of input u and
             % discrete states.
-            if(((v1_pos(1,1)-v2_pos(1,1))^2+(v1_pos(1,2)-v2_pos(1,2))^2)<300)
-                if((check_collision(obj,v1_pos,v2_pos)==1))
-                 collision = 1;
-                else
-                    collision=0;
-                end
+            distance = sqrt((v1_pos(1,1)-v2_pos(1,1))^2+(v1_pos(1,2)-v2_pos(1,2))^2);
+            if(distance<20)
+                collision_flag = check_collision(obj.v1_frame,obj.v2_frame,v1_pos,v2_pos)
             else
-                collision=0;
-                return
+                collision_flag = false;
+                return;
             end
         end
 
