@@ -29,7 +29,7 @@ classdef collision_detection < matlab.System
         function collision_flag = stepImpl(obj,v1_pos,v2_pos)
             % Implement algorithm. Calculate y as a function of input u and
             % discrete states.
-            distance = sqrt((v1_pos(1,1)-v2_pos(1,1))^2+(v1_pos(1,2)-v2_pos(1,2))^2);
+            distance = sqrt((v1_pos(1,1)-v2_pos(1,1))^2+(v1_pos(2,1)-v2_pos(2,1))^2);
             if(distance<20)
                 collision_flag = check_collision(obj.v1_frame,obj.v2_frame,v1_pos,v2_pos)
             else

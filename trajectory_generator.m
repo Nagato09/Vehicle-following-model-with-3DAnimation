@@ -26,7 +26,7 @@ classdef trajectory_generator < matlab.System & matlab.system.mixin.Propagates &
         dt=0.1;%sample time of the control signal
         T=0;%time duration of the whole lane-switch procss
         start_time=0;
-        Model_Name='VehicleFollowing_copy';
+        Model_Name='VehicleFollowing';
         
     end
     
