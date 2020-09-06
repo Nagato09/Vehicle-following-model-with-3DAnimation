@@ -41,7 +41,7 @@ classdef trajectory_generator < matlab.System & matlab.system.mixin.Propagates &
             finish=0;
             if((drivingMode==4)&&(obj.flag==0))
                 obj.flag=1;
-                obj.target_point=current_point+[50 5];
+                obj.target_point=current_point+[50 3];
                 obj.start_time=get_param(obj.Model_Name,'SimulationTime');
             end
             %% Waypoint generation
