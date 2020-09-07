@@ -19,7 +19,7 @@ road(scenario, roadCenters);
 % Add the ego vehicle
 egoVehicle = vehicle(scenario, ...
     'ClassID', 1, ...
-    'Position', [0 -1.5 0]);
+    'Position', [4 -1.5 0]);
 waypoints = [ans.ego_info.InertFrm.Cg.Disp.X.Data ans.ego_info.InertFrm.Cg.Disp.Y.Data ans.ego_info.InertFrm.Cg.Disp.Z.Data];
 speed = ans.ego_info.InertFrm.Cg.Vel.Xdot.Data;
 trajectory(egoVehicle, waypoints, speed);
