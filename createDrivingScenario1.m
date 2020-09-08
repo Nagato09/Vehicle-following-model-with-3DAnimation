@@ -5,8 +5,9 @@ function [scenario, egoVehicle] = createDrivingScenario1()
 % Generated on: 07-Sep-2020 22:06:04
 
 %get scenario data
-open_system('VehicleFollowing');
-sim('VehicleFollowing');
+model_name = 'VehicleFollowing';
+open_system(model_name);
+sim(model_name);
 data = ans;
 % Construct a drivingScenario object.
 scenario = drivingScenario;
@@ -20,20 +21,20 @@ road(scenario, roadCenters, 'Lanes', laneSpecification);
 % Add the ego vehicle
 egoVehicle = vehicle(scenario, ...
     'ClassID', 1, ...
-    'Position', [9.7 -2.5 0]);
+    'Position', [str2double(get_param(append(model_name,'/Vehicle Model 3 - PID'),'X_init')) str2double(get_param(append(model_name,'/Vehicle Model 3 - PID'),'Y_init')) 0]);
     waypoints = [data.ego_info.InertFrm.Cg.Disp.X.Data data.ego_info.InertFrm.Cg.Disp.Y.Data data.ego_info.InertFrm.Cg.Disp.Z.Data];
     speed = sqrt(data.ego_info.InertFrm.Cg.Vel.Xdot.Data.^2+data.ego_info.InertFrm.Cg.Vel.Ydot.Data.^2);
     trajectory(egoVehicle, waypoints, speed);
 % Add the non-ego actors
 car1 = vehicle(scenario, ...
     'ClassID', 2, ...
-    'Position', [49.8 -2.5 0]);
+    'Position', [str2double(get_param(append(model_name,'/Vehicle Model 1 - Manual'),'X_init')) str2double(get_param(append(model_name,'/Vehicle Model 1 - Manual'),'Y_init')) 0]);
     waypoints = [data.v1_info.InertFrm.Cg.Disp.X.Data data.v1_info.InertFrm.Cg.Disp.Y.Data data.v1_info.InertFrm.Cg.Disp.Z.Data];
     speed = sqrt(data.v1_info.InertFrm.Cg.Vel.Xdot.Data.^2+data.v1_info.InertFrm.Cg.Vel.Ydot.Data.^2);
     trajectory(car1, waypoints, speed);
 car2 = vehicle(scenario, ...
     'ClassID', 3, ...
-    'Position', [112.9 -2.5 0]);
+    'Position', [str2double(get_param(append(model_name,'/Vehicle Model 2 - MPC'),'X_init')) str2double(get_param(append(model_name,'/Vehicle Model 2 - MPC'),'Y_init')) 0]);
     waypoints = [data.v2_info.X.Data data.v2_info.Y.Data data.v2_info.Z.Data];
     speed = sqrt(data.v2_info.xdot.Data.^2+data.v2_info.ydot.Data.^2);
     trajectory(car2, waypoints, speed);
