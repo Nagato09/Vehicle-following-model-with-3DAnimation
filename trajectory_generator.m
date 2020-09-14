@@ -36,20 +36,22 @@ classdef trajectory_generator < matlab.System & matlab.system.mixin.Propagates &
           
         end
         
-        function  yaw_angle = stepImpl(obj,current_point,v_x,v_y,a_y,drivingMode)
+        function  command = stepImpl(obj,current_point,v_x,v_y,a_y,drivingMode)
             % Implement algorithm. Calculate y as a function of input u and
             % discrete states.
-%             finish=0;
+            
 %left lane switch
             if((drivingMode==4)&&(obj.flag==0))
+                finish = 0;
                 obj.flag=1;
-                obj.target_point=current_point+[50 3];
+                obj.target_point=current_point+[50 2.55];
                 obj.start_time=get_param(obj.Model_Name,'SimulationTime');
             end
 %right lane switch
             if((drivingMode==5)&&(obj.flag==0))
+                finish = 0;
                 obj.flag=1;
-                obj.target_point=current_point+[50 -3];
+                obj.target_point=current_point+[50 -2.55];
                 obj.start_time=get_param(obj.Model_Name,'SimulationTime');
             end
             %% Waypoint generation
@@ -90,7 +92,11 @@ classdef trajectory_generator < matlab.System & matlab.system.mixin.Propagates &
 %             y=[];
 %             y_dot=[];
 %             y_ddot=[];
-            
+            if(time<obj.start_time+obj.T)
+                finish=0;
+            else
+                finish=1;            
+            end
             t=time-obj.start_time;
 %             y       = obj.a0+obj.a1*t+obj.a2*t^2+obj.a3*t^3+obj.a4*t^4+obj.a5*t^5;
             y_dot   = obj.a1+2*obj.a2*t+3*obj.a3*t^2+4*obj.a4*t^3+5*obj.a5*t^4;
@@ -99,15 +105,15 @@ classdef trajectory_generator < matlab.System & matlab.system.mixin.Propagates &
 %             nextState_y=[y;y_dot;y_ddot];
             
             %% Yaw angle reference
-            yaw_angle=atan(y_dot/ x_dot);
+            yaw_angle=atan(y_dot/ x_dot);        
             else
                 obj.a0=[];
                 obj.flag=0;
                 obj.T=0;
                 yaw_angle=0;
-                return;
+                finish = 1;
             end
-          
+            command = [yaw_angle finish];
             end
 
 
@@ -117,7 +123,7 @@ classdef trajectory_generator < matlab.System & matlab.system.mixin.Propagates &
 
         function out = getOutputSizeImpl(obj)
             % Return size for each output port
-            out = [1 1];
+            out = [1 2];
 
             % Example: inherit size from first input port
             % out = propagatedInputSize(obj,1);
