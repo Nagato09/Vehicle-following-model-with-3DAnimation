@@ -36,20 +36,20 @@ classdef trajectory_generator < matlab.System & matlab.system.mixin.Propagates &
           
         end
         
-        function  command = stepImpl(obj,current_point,v_x,v_y,a_y,drivingMode)
+        function  [is_finish,yaw_angle] = stepImpl(obj,current_point,v_x,v_y,a_y,drivingMode)
             % Implement algorithm. Calculate y as a function of input u and
             % discrete states.
             
 %left lane switch
             if((drivingMode==4)&&(obj.flag==0))
-                finish = 0;
+                is_finish = 0;
                 obj.flag=1;
                 obj.target_point=current_point+[50 2.55];
                 obj.start_time=get_param(obj.Model_Name,'SimulationTime');
             end
 %right lane switch
             if((drivingMode==5)&&(obj.flag==0))
-                finish = 0;
+                is_finish = 0;
                 obj.flag=1;
                 obj.target_point=current_point+[50 -2.55];
                 obj.start_time=get_param(obj.Model_Name,'SimulationTime');
@@ -93,9 +93,9 @@ classdef trajectory_generator < matlab.System & matlab.system.mixin.Propagates &
 %             y_dot=[];
 %             y_ddot=[];
             if(time<obj.start_time+obj.T)
-                finish=0;
+                is_finish=0;
             else
-                finish=1;            
+                is_finish=1;            
             end
             t=time-obj.start_time;
 %             y       = obj.a0+obj.a1*t+obj.a2*t^2+obj.a3*t^3+obj.a4*t^4+obj.a5*t^5;
@@ -111,43 +111,46 @@ classdef trajectory_generator < matlab.System & matlab.system.mixin.Propagates &
                 obj.flag=0;
                 obj.T=0;
                 yaw_angle=0;
-                finish = 1;
+                is_finish = 1;
             end
-            command = [yaw_angle finish];
             end
 
 
-        function resetImpl(obj)
+        function resetImpl(~)
             % Initialize / reset discrete-state properties
         end
 
-        function out = getOutputSizeImpl(obj)
+        function [out,out2] = getOutputSizeImpl(~)
             % Return size for each output port
-            out = [1 2];
+            out = [1 1];
+            out2 = [1 1];
 
             % Example: inherit size from first input port
             % out = propagatedInputSize(obj,1);
         end
 
-        function out = getOutputDataTypeImpl(obj)
+        function [out,out2] = getOutputDataTypeImpl(~)
             % Return data type for each output port
             out = "double";
+            out2 = "double";
 
             % Example: inherit data type from first input port
             % out = propagatedInputDataType(obj,1);
         end
 
-        function out = isOutputComplexImpl(obj)
+        function [out,out2] = isOutputComplexImpl(~)
             % Return true for each output port with complex data
             out = false;
+            out2 = false;
 
             % Example: inherit complexity from first input port
             % out = propagatedInputComplexity(obj,1);
         end
 
-        function out = isOutputFixedSizeImpl(obj)
+        function [out,out2] = isOutputFixedSizeImpl(~)
             % Return true for each output port with fixed size
             out = true;
+            out2 = true;
 
             % Example: inherit fixed-size status from first input port
             % out = propagatedInputFixedSize(obj,1);
