@@ -1,4 +1,5 @@
 function [lf_radar_range,mf_radar_range,rf_radar_range] = get_radar_range(v_frame,v_pos)
+%test
     centerP = [v_pos(1);v_pos(2)];
     angle = v_pos(3); % Vehicle orientation in rad
     a = v_frame(1)/2;
